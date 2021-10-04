@@ -1,14 +1,16 @@
 package com.alefiengo.springboot.api.controller;
 
-import com.alefiengo.springboot.api.controller.exception.BadRequestException;
 import com.alefiengo.springboot.api.entity.Course;
 import com.alefiengo.springboot.api.entity.Student;
 import com.alefiengo.springboot.api.service.CourseService;
 import com.alefiengo.springboot.api.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -25,71 +27,108 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> getAll() {
+    public ResponseEntity<?> getAll() {
+        Map<String, Object> message = new HashMap<>();
         List<Student> students = (List<Student>) studentService.findAll();
 
         if (students.isEmpty()) {
-            throw new BadRequestException("No students found.");
+            message.put("success", Boolean.FALSE);
+            message.put("message", "No students found.");
+            return ResponseEntity.badRequest().body(message);
         }
 
-        return students;
+        message.put("success", Boolean.TRUE);
+        message.put("data", students);
+
+        return ResponseEntity.ok(message);
     }
 
     @GetMapping("/{id}")
-    public Student getById(@PathVariable Long id) {
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        Map<String, Object> message = new HashMap<>();
         Optional<Student> oStudent = studentService.findById(id);
 
         if (!oStudent.isPresent()) {
-            throw new BadRequestException(String.format("No student found. ID = %d", id));
+            message.put("success", Boolean.FALSE);
+            message.put("message", String.format("No student found. ID = %d", id));
+            return ResponseEntity.badRequest().body(message);
         }
 
-        return oStudent.get();
+        message.put("success", Boolean.TRUE);
+        message.put("data", oStudent.get());
+
+        return ResponseEntity.ok(message);
     }
 
     @PostMapping
-    public Student create(@RequestBody Student student) {
-        return studentService.save(student);
+    public ResponseEntity<?> create(@RequestBody Student student) {
+
+        Map<String, Object> message = new HashMap<>();
+
+        message.put("success", Boolean.TRUE);
+        message.put("data", studentService.save(student));
+
+        return ResponseEntity.ok(message);
     }
 
     @PutMapping("/{id}")
-    public Student update(@PathVariable Long id, @RequestBody Student student) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Student student) {
+        Map<String, Object> message = new HashMap<>();
         Student studentUpdate = null;
         Optional<Student> oStudent = studentService.findById(id);
 
         if (!oStudent.isPresent()) {
-            throw new BadRequestException(String.format("No student found. ID = %d", id));
+            message.put("success", Boolean.FALSE);
+            message.put("message", String.format("No student found. ID = %d", id));
+            return ResponseEntity.badRequest().body(message);
         }
 
         studentUpdate = oStudent.get();
         studentUpdate.setLastName(student.getLastName());
         studentUpdate.setFirstName(student.getFirstName());
 
-        return studentService.save(studentUpdate);
+        message.put("success", Boolean.TRUE);
+        message.put("data", studentService.save(studentUpdate));
+
+        return ResponseEntity.ok(message);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        Map<String, Object> message = new HashMap<>();
         Optional<Student> oStudent = studentService.findById(id);
 
         if (!oStudent.isPresent()) {
-            throw new BadRequestException(String.format("No student found. ID = %d", id));
+            message.put("success", Boolean.FALSE);
+            message.put("message", String.format("No student found. ID = %d", id));
+            return ResponseEntity.badRequest().body(message);
         }
 
         studentService.deleteById(id);
+
+        message.put("success", Boolean.TRUE);
+        message.put("data", null);
+
+        return ResponseEntity.ok(message);
     }
 
     @PostMapping("/{idStudent}/courses/{idCourse}")
-    public Student toAssignClassStudent(@PathVariable Long idStudent, @PathVariable Long idCourse) {
+    public ResponseEntity<?> toAssignClassStudent(@PathVariable Long idStudent, @PathVariable Long idCourse) {
+        Map<String, Object> message = new HashMap<>();
         Optional<Student> oStudent = studentService.findById(idStudent);
 
         if (!oStudent.isPresent()) {
-            throw new BadRequestException(String.format("No student found. ID = %d", idStudent));
+            message.put("success", Boolean.FALSE);
+            message.put("message", String.format("No student found. ID = %d", idStudent));
+            return ResponseEntity.badRequest().body(message);
         }
 
         Optional<Course> oCourse = courseService.findById(idCourse);
 
         if (!oCourse.isPresent()) {
-            throw new BadRequestException(String.format("No course found. ID = %d", idCourse));
+            message.put("success", Boolean.FALSE);
+            message.put("message", String.format("No course found. ID = %d", idCourse));
+            return ResponseEntity.badRequest().body(message);
         }
 
         Student student = oStudent.get();
@@ -97,6 +136,9 @@ public class StudentController {
 
         student.getCourses().add(course);
 
-        return studentService.save(student);
+        message.put("success", Boolean.TRUE);
+        message.put("data", studentService.save(student));
+
+        return ResponseEntity.ok(message);
     }
 }

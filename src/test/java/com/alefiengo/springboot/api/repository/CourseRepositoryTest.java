@@ -37,7 +37,7 @@ class CourseRepositoryTest {
     @DisplayName("Find Courses by Code")
     void findCourseByCodeIgnoreCase() {
         //when
-        Optional<Course> expected = courseRepository.findCourseByCodeIgnoreCase("cla-001");
+        Optional<Course> expected = courseRepository.findCourseByCodeIgnoreCase("cod-001");
 
         //then
         assertThat(expected.isPresent()).isTrue();
