@@ -3,7 +3,6 @@ package com.alefiengo.springboot.api.controller;
 import com.alefiengo.springboot.api.entity.Course;
 import com.alefiengo.springboot.api.service.CourseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +44,7 @@ public class CourseController {
 
         if (!oCourse.isPresent()) {
             message.put("success", Boolean.FALSE);
-            message.put("message", String.format("No course found. ID = %d", id));
+            message.put("message", String.format("No course with ID: '%d', found.", id));
             return ResponseEntity.badRequest().body(message);
         }
 
@@ -93,7 +92,7 @@ public class CourseController {
 
         if (!oCourse.isPresent()) {
             message.put("success", Boolean.FALSE);
-            message.put("message", String.format("No course found. ID = %d", id));
+            message.put("message", String.format("No course with ID: '%d', found.", id));
             return ResponseEntity.badRequest().body(message);
         }
 
@@ -115,7 +114,7 @@ public class CourseController {
 
         if (!oCourse.isPresent()) {
             message.put("success", Boolean.FALSE);
-            message.put("message", String.format("No course found. ID = %d", id));
+            message.put("message", String.format("No course with ID: '%d', found.", id));
             return ResponseEntity.badRequest().body(message);
         }
 
@@ -123,6 +122,57 @@ public class CourseController {
 
         message.put("success", Boolean.TRUE);
         message.put("data", null);
+
+        return ResponseEntity.ok(message);
+    }
+
+    @GetMapping("/code")
+    public ResponseEntity<?> findCourseByCode(@RequestParam String code) {
+        Map<String, Object> message = new HashMap<>();
+        Optional<Course> oCourse = courseService.findCourseByCodeIgnoreCase(code);
+
+        if (!oCourse.isPresent()) {
+            message.put("success", Boolean.FALSE);
+            message.put("message", String.format("No course with code: '%s', found.", code));
+            return ResponseEntity.badRequest().body(message);
+        }
+
+        message.put("success", Boolean.TRUE);
+        message.put("data", oCourse.get());
+
+        return ResponseEntity.ok(message);
+    }
+
+    @GetMapping("/title")
+    public ResponseEntity<?> findCourseByTitle(@RequestParam String title) {
+        Map<String, Object> message = new HashMap<>();
+        List<Course> courses = (List<Course>) courseService.findCourseByTitleContains(title);
+
+        if (courses.isEmpty()) {
+            message.put("success", Boolean.FALSE);
+            message.put("message", String.format("No course with title contains: '%s', found.", title));
+            return ResponseEntity.badRequest().body(message);
+        }
+
+        message.put("success", Boolean.TRUE);
+        message.put("data", courses);
+
+        return ResponseEntity.ok(message);
+    }
+
+    @GetMapping("/description")
+    public ResponseEntity<?> findCourseByDescription(@RequestParam String description) {
+        Map<String, Object> message = new HashMap<>();
+        List<Course> courses = (List<Course>) courseService.findCourseByDescriptionContains(description);
+
+        if (courses.isEmpty()) {
+            message.put("success", Boolean.FALSE);
+            message.put("message", String.format("No course with description contains: '%s', found.", description));
+            return ResponseEntity.badRequest().body(message);
+        }
+
+        message.put("success", Boolean.TRUE);
+        message.put("data", courses);
 
         return ResponseEntity.ok(message);
     }

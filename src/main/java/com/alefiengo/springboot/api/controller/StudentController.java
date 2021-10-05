@@ -5,7 +5,6 @@ import com.alefiengo.springboot.api.entity.Student;
 import com.alefiengo.springboot.api.service.CourseService;
 import com.alefiengo.springboot.api.service.StudentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +47,7 @@ public class StudentController {
 
         if (!oStudent.isPresent()) {
             message.put("success", Boolean.FALSE);
-            message.put("message", String.format("No student found. ID = %d", id));
+            message.put("message", String.format("No student with ID: '%d', found.", id));
             return ResponseEntity.badRequest().body(message);
         }
 
@@ -96,7 +95,7 @@ public class StudentController {
 
         if (!oStudent.isPresent()) {
             message.put("success", Boolean.FALSE);
-            message.put("message", String.format("No student found. ID = %d", id));
+            message.put("message", String.format("No student with ID: '%d', found.", id));
             return ResponseEntity.badRequest().body(message);
         }
 
@@ -117,7 +116,7 @@ public class StudentController {
 
         if (!oStudent.isPresent()) {
             message.put("success", Boolean.FALSE);
-            message.put("message", String.format("No student found. ID = %d", id));
+            message.put("message", String.format("No student with ID: '%d', found.", id));
             return ResponseEntity.badRequest().body(message);
         }
 
@@ -136,7 +135,7 @@ public class StudentController {
 
         if (!oStudent.isPresent()) {
             message.put("success", Boolean.FALSE);
-            message.put("message", String.format("No student found. ID = %d", idStudent));
+            message.put("message", String.format("No student with ID: '%d', found.", idStudent));
             return ResponseEntity.badRequest().body(message);
         }
 
@@ -144,7 +143,7 @@ public class StudentController {
 
         if (!oCourse.isPresent()) {
             message.put("success", Boolean.FALSE);
-            message.put("message", String.format("No course found. ID = %d", idCourse));
+            message.put("message", String.format("No course with ID: '%d', found.", idCourse));
             return ResponseEntity.badRequest().body(message);
         }
 
@@ -155,6 +154,57 @@ public class StudentController {
 
         message.put("success", Boolean.TRUE);
         message.put("data", studentService.save(student));
+
+        return ResponseEntity.ok(message);
+    }
+
+    @GetMapping("/lastname-firstname")
+    public ResponseEntity<?> findStudentByLastNameAndFirstName(@RequestParam String lastName, @RequestParam String firstName) {
+        Map<String, Object> message = new HashMap<>();
+        Optional<Student> oStudent = studentService.findStudentByLastNameAndFirstName(lastName, firstName);
+
+        if (!oStudent.isPresent()) {
+            message.put("success", Boolean.FALSE);
+            message.put("message", String.format("No student with last name: '%s' and first name: '%s', found.", lastName, firstName));
+            return ResponseEntity.badRequest().body(message);
+        }
+
+        message.put("success", Boolean.TRUE);
+        message.put("data", oStudent.get());
+
+        return ResponseEntity.ok(message);
+    }
+
+    @GetMapping("/lastname")
+    public ResponseEntity<?> findStudentByLastName(@RequestParam String lastName) {
+        Map<String, Object> message = new HashMap<>();
+        List<Student> students = (List<Student>) studentService.findStudentByLastName(lastName);
+
+        if (students.isEmpty()) {
+            message.put("success", Boolean.FALSE);
+            message.put("message", String.format("No course with last name contains: '%s', found.", lastName));
+            return ResponseEntity.badRequest().body(message);
+        }
+
+        message.put("success", Boolean.TRUE);
+        message.put("data", students);
+
+        return ResponseEntity.ok(message);
+    }
+
+    @GetMapping("/firstname")
+    public ResponseEntity<?> findStudentByFirstName(@RequestParam String firstName) {
+        Map<String, Object> message = new HashMap<>();
+        List<Student> students = (List<Student>) studentService.findStudentByFirstName(firstName);
+
+        if (students.isEmpty()) {
+            message.put("success", Boolean.FALSE);
+            message.put("message", String.format("No course with first name contains: '%s', found.", firstName));
+            return ResponseEntity.badRequest().body(message);
+        }
+
+        message.put("success", Boolean.TRUE);
+        message.put("data", students);
 
         return ResponseEntity.ok(message);
     }
