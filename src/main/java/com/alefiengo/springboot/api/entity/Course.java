@@ -1,6 +1,7 @@
 package com.alefiengo.springboot.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -11,27 +12,36 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name = "course")
 public class Course implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NonNull
     private Long id;
 
     @NotNull
     @NotEmpty
-    @Size(min = 0, max = 10)
+    @Size(max = 10)
     @Column(name = "code", nullable = false, length = 10)
+    @NonNull
     private String code;
 
     @NotNull
     @NotEmpty
-    @Size(min = 0, max = 150)
+    @Size(max = 150)
     @Column(name = "title", nullable = false, length = 150)
+    @NonNull
     private String title;
 
     @Column(name = "description")
+    @NonNull
     private String description;
 
     @Column(name = "created_at")
@@ -45,73 +55,8 @@ public class Course implements Serializable {
             fetch = FetchType.LAZY
     )
     @JsonIgnoreProperties({"courses"})
+    @ToString.Exclude
     private Set<Student> students;
-
-    public Course() {
-    }
-
-    public Course(Long id, String code, String title, String description) {
-        this.id = id;
-        this.code = code;
-        this.title = title;
-        this.description = description;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Set<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(Set<Student> students) {
-        this.students = students;
-    }
 
     @PrePersist
     public void beforePersist() {
@@ -124,27 +69,15 @@ public class Course implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "Course{" +
-                "id=" + id +
-                ", code='" + code + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return id.equals(course.id) && code.equals(course.code);
+        return id.equals(course.id) && code.equals(course.code) && title.equals(course.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code);
+        return Objects.hash(id, code, title);
     }
 }

@@ -1,6 +1,7 @@
 package com.alefiengo.springboot.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -11,24 +12,32 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name = "student")
 public class Student implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NonNull
     private Long id;
 
     @NotNull
     @NotEmpty
-    @Size(min = 0, max = 60)
+    @Size(max = 60)
     @Column(name = "last_name", nullable = false, length = 60)
+    @NonNull
     private String lastName;
 
     @NotNull
     @NotEmpty
-    @Size(min = 0, max = 60)
+    @Size(max = 60)
     @Column(name = "first_name", nullable = false, length = 60)
+    @NonNull
     private String firstName;
 
     @Column(name = "created_at")
@@ -50,64 +59,8 @@ public class Student implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     @JsonIgnoreProperties({"students"})
+    @ToString.Exclude
     Set<Course> courses;
-
-    public Student() {
-    }
-
-    public Student(Long id, String lastName, String firstName) {
-        this.id = id;
-        this.lastName = lastName;
-        this.firstName = firstName;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Set<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(Set<Course> courses) {
-        this.courses = courses;
-    }
 
     @PrePersist
     public void beforePersist() {
@@ -117,17 +70,6 @@ public class Student implements Serializable {
     @PreUpdate
     public void beforeUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    @Override
-    public String toString() {
-        return "Student{" +
-                "id=" + id +
-                ", lastName='" + lastName + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
     }
 
     @Override
