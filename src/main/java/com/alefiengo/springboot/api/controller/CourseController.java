@@ -4,8 +4,10 @@ import com.alefiengo.springboot.api.entity.Course;
 import com.alefiengo.springboot.api.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,8 +59,18 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Course course) {
+    public ResponseEntity<?> create(@Valid @RequestBody Course course, BindingResult result) {
         Map<String, Object> message = new HashMap<>();
+        Map<String, Object> validations = new HashMap<>();
+
+        if (result.hasErrors()) {
+            result.getFieldErrors()
+                    .forEach(error -> {
+                        validations.put(error.getField(), error.getDefaultMessage());
+                    });
+
+            return ResponseEntity.badRequest().body(validations);
+        }
 
         message.put("success", Boolean.TRUE);
         message.put("data", courseService.save(course));
@@ -67,10 +79,20 @@ public class CourseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Course course) {
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody Course course, BindingResult result) {
         Map<String, Object> message = new HashMap<>();
+        Map<String, Object> validations = new HashMap<>();
         Course courseUpdate = null;
         Optional<Course> oCourse = courseService.findById(id);
+
+        if (result.hasErrors()) {
+            result.getFieldErrors()
+                    .forEach(error -> {
+                        validations.put(error.getField(), error.getDefaultMessage());
+                    });
+
+            return ResponseEntity.badRequest().body(validations);
+        }
 
         if (!oCourse.isPresent()) {
             message.put("success", Boolean.FALSE);

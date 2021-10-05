@@ -3,6 +3,9 @@ package com.alefiengo.springboot.api.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -16,9 +19,15 @@ public class Student implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @NotEmpty
+    @Size(min = 0, max = 60)
     @Column(name = "last_name", nullable = false, length = 60)
     private String lastName;
 
+    @NotNull
+    @NotEmpty
+    @Size(min = 0, max = 60)
     @Column(name = "first_name", nullable = false, length = 60)
     private String firstName;
 

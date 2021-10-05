@@ -6,8 +6,10 @@ import com.alefiengo.springboot.api.service.CourseService;
 import com.alefiengo.springboot.api.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,9 +63,18 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Student student) {
-
+    public ResponseEntity<?> create(@Valid @RequestBody Student student, BindingResult result) {
         Map<String, Object> message = new HashMap<>();
+        Map<String, Object> validations = new HashMap<>();
+
+        if (result.hasErrors()) {
+            result.getFieldErrors()
+                    .forEach(error -> {
+                        validations.put(error.getField(), error.getDefaultMessage());
+                    });
+
+            return ResponseEntity.badRequest().body(validations);
+        }
 
         message.put("success", Boolean.TRUE);
         message.put("data", studentService.save(student));
@@ -72,10 +83,20 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Student student) {
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody Student student, BindingResult result) {
         Map<String, Object> message = new HashMap<>();
+        Map<String, Object> validations = new HashMap<>();
         Student studentUpdate = null;
         Optional<Student> oStudent = studentService.findById(id);
+
+        if (result.hasErrors()) {
+            result.getFieldErrors()
+                    .forEach(error -> {
+                        validations.put(error.getField(), error.getDefaultMessage());
+                    });
+
+            return ResponseEntity.badRequest().body(validations);
+        }
 
         if (!oStudent.isPresent()) {
             message.put("success", Boolean.FALSE);

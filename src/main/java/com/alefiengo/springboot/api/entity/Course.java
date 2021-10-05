@@ -3,6 +3,9 @@ package com.alefiengo.springboot.api.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -16,9 +19,15 @@ public class Course implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @NotEmpty
+    @Size(min = 0, max = 10)
     @Column(name = "code", nullable = false, length = 10)
     private String code;
 
+    @NotNull
+    @NotEmpty
+    @Size(min = 0, max = 150)
     @Column(name = "title", nullable = false, length = 150)
     private String title;
 
