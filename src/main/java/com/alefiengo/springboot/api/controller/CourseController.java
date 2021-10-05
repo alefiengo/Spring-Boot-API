@@ -2,6 +2,7 @@ package com.alefiengo.springboot.api.controller;
 
 import com.alefiengo.springboot.api.entity.Course;
 import com.alefiengo.springboot.api.service.CourseService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -13,16 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/courses")
 public class CourseController {
 
     private final CourseService courseService;
-
-    @Autowired
-    public CourseController(CourseService courseService) {
-        this.courseService = courseService;
-    }
 
     @GetMapping
     public ResponseEntity<?> getAll() {

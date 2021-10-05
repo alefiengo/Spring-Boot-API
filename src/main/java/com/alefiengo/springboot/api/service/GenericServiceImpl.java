@@ -1,17 +1,15 @@
 package com.alefiengo.springboot.api.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 public class GenericServiceImpl<E, R extends CrudRepository<E, Long>> implements GenericService<E> {
 
     protected final R repository;
-
-    public GenericServiceImpl(R repository) {
-        this.repository = repository;
-    }
 
     @Override
     @Transactional(readOnly = true)

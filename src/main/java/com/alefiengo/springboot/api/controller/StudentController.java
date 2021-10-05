@@ -4,6 +4,7 @@ import com.alefiengo.springboot.api.entity.Course;
 import com.alefiengo.springboot.api.entity.Student;
 import com.alefiengo.springboot.api.service.CourseService;
 import com.alefiengo.springboot.api.service.StudentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -15,18 +16,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/students")
 public class StudentController {
 
     private final StudentService studentService;
     private final CourseService courseService;
-
-    @Autowired
-    public StudentController(StudentService studentService, CourseService courseService) {
-        this.studentService = studentService;
-        this.courseService = courseService;
-    }
 
     @GetMapping
     public ResponseEntity<?> getAll() {
