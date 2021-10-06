@@ -1,5 +1,6 @@
 package com.alefiengo.springboot.api.service;
 
+import com.alefiengo.springboot.api.entity.Course;
 import com.alefiengo.springboot.api.entity.Student;
 import com.alefiengo.springboot.api.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,11 @@ public class StudentServiceImpl extends GenericServiceImpl<Student, StudentRepos
     @Transactional(readOnly = true)
     public Iterable<Student> findStudentByFirstName(String firstName) {
         return repository.findStudentByFirstName(firstName);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Iterable<Course> findCoursesByStudentId(Long id) {
+        return repository.findCoursesByStudentId(id);
     }
 }

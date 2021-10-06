@@ -159,7 +159,7 @@ public class StudentController {
     }
 
     @GetMapping("/lastname-firstname")
-    public ResponseEntity<?> findStudentByLastNameAndFirstName(@RequestParam String lastName, @RequestParam String firstName) {
+    public ResponseEntity<?> getStudentByLastNameAndFirstName(@RequestParam String lastName, @RequestParam String firstName) {
         Map<String, Object> message = new HashMap<>();
         Optional<Student> oStudent = studentService.findStudentByLastNameAndFirstName(lastName, firstName);
 
@@ -176,7 +176,7 @@ public class StudentController {
     }
 
     @GetMapping("/lastname")
-    public ResponseEntity<?> findStudentByLastName(@RequestParam String lastName) {
+    public ResponseEntity<?> getStudentByLastName(@RequestParam String lastName) {
         Map<String, Object> message = new HashMap<>();
         List<Student> students = (List<Student>) studentService.findStudentByLastName(lastName);
 
@@ -193,7 +193,7 @@ public class StudentController {
     }
 
     @GetMapping("/firstname")
-    public ResponseEntity<?> findStudentByFirstName(@RequestParam String firstName) {
+    public ResponseEntity<?> getStudentByFirstName(@RequestParam String firstName) {
         Map<String, Object> message = new HashMap<>();
         List<Student> students = (List<Student>) studentService.findStudentByFirstName(firstName);
 
@@ -205,6 +205,23 @@ public class StudentController {
 
         message.put("success", Boolean.TRUE);
         message.put("data", students);
+
+        return ResponseEntity.ok(message);
+    }
+
+    @GetMapping("/{id}/courses")
+    public ResponseEntity<?> getCoursesByStudentId(@PathVariable Long id) {
+        Map<String, Object> message = new HashMap<>();
+        List<Course> courses = (List<Course>) studentService.findCoursesByStudentId(id);
+
+        if (courses.isEmpty()) {
+            message.put("success", Boolean.FALSE);
+            message.put("message", String.format("No courses associate to student with ID: '%d', found.", id));
+            return ResponseEntity.badRequest().body(message);
+        }
+
+        message.put("success", Boolean.TRUE);
+        message.put("data", courses);
 
         return ResponseEntity.ok(message);
     }

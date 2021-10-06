@@ -1,6 +1,7 @@
 package com.alefiengo.springboot.api.controller;
 
 import com.alefiengo.springboot.api.entity.Course;
+import com.alefiengo.springboot.api.entity.Student;
 import com.alefiengo.springboot.api.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -127,7 +128,7 @@ public class CourseController {
     }
 
     @GetMapping("/code")
-    public ResponseEntity<?> findCourseByCode(@RequestParam String code) {
+    public ResponseEntity<?> getCourseByCode(@RequestParam String code) {
         Map<String, Object> message = new HashMap<>();
         Optional<Course> oCourse = courseService.findCourseByCodeIgnoreCase(code);
 
@@ -144,7 +145,7 @@ public class CourseController {
     }
 
     @GetMapping("/title")
-    public ResponseEntity<?> findCourseByTitle(@RequestParam String title) {
+    public ResponseEntity<?> getCourseByTitle(@RequestParam String title) {
         Map<String, Object> message = new HashMap<>();
         List<Course> courses = (List<Course>) courseService.findCourseByTitleContains(title);
 
@@ -161,7 +162,7 @@ public class CourseController {
     }
 
     @GetMapping("/description")
-    public ResponseEntity<?> findCourseByDescription(@RequestParam String description) {
+    public ResponseEntity<?> getCourseByDescription(@RequestParam String description) {
         Map<String, Object> message = new HashMap<>();
         List<Course> courses = (List<Course>) courseService.findCourseByDescriptionContains(description);
 
@@ -173,6 +174,23 @@ public class CourseController {
 
         message.put("success", Boolean.TRUE);
         message.put("data", courses);
+
+        return ResponseEntity.ok(message);
+    }
+
+    @GetMapping("/{id}/students")
+    public ResponseEntity<?> getStudentsByCourseId(@PathVariable Long id) {
+        Map<String, Object> message = new HashMap<>();
+        List<Student> students = (List<Student>) courseService.findStudentsByCourseId(id);
+
+        if (students.isEmpty()) {
+            message.put("success", Boolean.FALSE);
+            message.put("message", String.format("No students in to course with ID: '%d', found.", id));
+            return ResponseEntity.badRequest().body(message);
+        }
+
+        message.put("success", Boolean.TRUE);
+        message.put("data", students);
 
         return ResponseEntity.ok(message);
     }

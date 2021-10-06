@@ -1,5 +1,6 @@
 package com.alefiengo.springboot.api.service;
 
+import com.alefiengo.springboot.api.entity.Course;
 import com.alefiengo.springboot.api.entity.Student;
 
 import java.util.Optional;
@@ -11,4 +12,6 @@ public interface StudentService extends GenericService<Student> {
     Iterable<Student> findStudentByLastName(String lastName);
 
     Iterable<Student> findStudentByFirstName(String firstName);
+
+    Iterable<Course> findCoursesByStudentId(Long id);
 }
