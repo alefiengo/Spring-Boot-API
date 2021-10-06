@@ -29,7 +29,7 @@ class CourseServiceImplTest {
         //given
         String code = "cla-001";
         when(courseRepository.findCourseByCodeIgnoreCase(code))
-                .thenReturn(Optional.of(DataDummy.course01(true)));
+                .thenReturn(Optional.of(DataDummy.course01()));
 
         //when
         Optional<Course> expected = courseService.findCourseByCodeIgnoreCase(code);
@@ -45,13 +45,13 @@ class CourseServiceImplTest {
         //given
         String title = "Course";
         when(courseRepository.findCourseByTitleContains(title))
-                .thenReturn(Arrays.asList(DataDummy.course01(true)));
+                .thenReturn(Arrays.asList(DataDummy.course01()));
 
         //when
         List<Course> expected = (List<Course>) courseService.findCourseByTitleContains(title);
 
         //then
-        assertThat(expected.get(0)).isEqualTo(DataDummy.course01(true));
+        assertThat(expected.get(0)).isEqualTo(DataDummy.course01());
 
         verify(courseRepository).findCourseByTitleContains(title);
     }
@@ -61,13 +61,13 @@ class CourseServiceImplTest {
         //given
         String description = "Course";
         when(courseRepository.findCourseByDescriptionContains(description))
-                .thenReturn(Arrays.asList(DataDummy.course01(true)));
+                .thenReturn(Arrays.asList(DataDummy.course01()));
 
         //when
         List<Course> expected = (List<Course>) courseService.findCourseByDescriptionContains(description);
 
         //then
-        assertThat(expected.get(0)).isEqualTo(DataDummy.course01(true));
+        assertThat(expected.get(0)).isEqualTo(DataDummy.course01());
 
         verify(courseRepository).findCourseByDescriptionContains(description);
     }

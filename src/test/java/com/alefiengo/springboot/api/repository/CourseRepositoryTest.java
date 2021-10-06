@@ -23,7 +23,7 @@ class CourseRepositoryTest {
     @BeforeEach
     void setUp() {
         //given
-        courseRepository.save(DataDummy.course01(false));
+        courseRepository.save(DataDummy.course01());
         courseRepository.save(DataDummy.course02());
         courseRepository.save(DataDummy.course03());
     }
