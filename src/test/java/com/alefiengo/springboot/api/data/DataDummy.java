@@ -6,15 +6,15 @@ import com.alefiengo.springboot.api.entity.Student;
 public class DataDummy {
 
     public static Student student01() {
-        return new Student((long) 1, "Fiengo", "Alejandro");
+        return new Student((long) 1, "Ebden", "Rocco");
     }
 
     public static Student student02() {
-        return new Student((long) 2, "Melendrez", "Cintia");
+        return new Student((long) 2, "Lomax", "Aiden");
     }
 
     public static Student student03() {
-        return new Student((long) 3, "Perez", "Juan");
+        return new Student((long) 3, "Larsen", "Regina");
     }
 
     public static Course course01() {
